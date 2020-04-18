@@ -85,4 +85,22 @@
         })
     </script>
 @endif
+@if(\Illuminate\Support\Facades\Session::has('qr-notfound'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'QRCode tidak terdaftar !'
+        })
+    </script>
+@endif
+@if(\Illuminate\Support\Facades\Session::has('belum-waktu'))
+    <script>
+        Swal.fire(
+            'Belum Waktu Absen',
+            'Silahkan coba di waktu yang sudah di tentukan!',
+            'question'
+        )
+    </script>
+@endif
 </html>

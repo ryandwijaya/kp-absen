@@ -11,7 +11,8 @@ class AbsenController extends Controller
 {
     public function __construct()
     {
-        date_default_timezone_set("Asia/Jakarta");
+        $this->middleware('auth');
+        date_default_timezone_set('Asia/Jakarta');
     }
 
     public function absen($jenis){
@@ -30,34 +31,42 @@ class AbsenController extends Controller
         $pegawai = DB::table('pegawai')
             ->where('pegawai_nip', '=', $id)
             ->first();
-        $cek_absen = $this->cekAbsen($pegawai->pegawai_id,date('Y-m-d'),'apel');
-        if ($cek_absen == 0){
-            if (date('H:m:s')  <=  $this->cekWaktu('apel') ){
-                DB::table('data_absen')->insert([
-                    'absen_pegawai' => $pegawai->pegawai_id,
-                    'absen_kategori' => 'apel',
-                    'absen_tgl' => date('Y-m-d'),
-                ]);
-            }else{
-                DB::table('data_absen')->insert([
-                    'absen_pegawai' => $pegawai->pegawai_id,
-                    'absen_kategori' => 'apel',
-                    'absen_status' => 'telat',
-                    'absen_tgl' => date('Y-m-d'),
-                ]);
-            }
+        if($pegawai != NULL){
+            $cek_absen = $this->cekAbsen($pegawai->pegawai_id,date('Y-m-d'),'apel');
+            if ($cek_absen == 0){
+                if (date('H:m:s')  <=  $this->cekWaktu('apel') ){
+                    DB::table('data_absen')->insert([
+                        'absen_pegawai' => $pegawai->pegawai_id,
+                        'absen_kategori' => 'apel',
+                        'absen_tgl' => date('Y-m-d'),
+                    ]);
+                }else{
+                    DB::table('data_absen')->insert([
+                        'absen_pegawai' => $pegawai->pegawai_id,
+                        'absen_kategori' => 'apel',
+                        'absen_status' => 'telat',
+                        'absen_tgl' => date('Y-m-d'),
+                    ]);
+                }
 
-            Session::flash('alert-absen', 'Berhasil Absen');
-            return redirect('/');
+                Session::flash('alert-absen', 'Berhasil Absen');
+                return redirect('/');
+            }else{
+                Session::flash('sudah-absen', 'Gagal Absen');
+                return redirect('/');
+            }
         }else{
-            Session::flash('sudah-absen', 'Gagal Absen');
+            Session::flash('qr-notfound', 'Gagal Absen');
             return redirect('/');
         }
+
     }
     public function absenPagi($id){
+
         $pegawai = DB::table('pegawai')
             ->where('pegawai_nip', '=', $id)
             ->first();
+        if($pegawai != NULL){
         $cek_absen = $this->cekAbsen($pegawai->pegawai_id,date('Y-m-d'),'pagi');
         if ($cek_absen == 0){
             if (date('H:m:s')  <=  $this->cekWaktu('pagi')) {
@@ -80,31 +89,44 @@ class AbsenController extends Controller
             Session::flash('sudah-absen', 'Gagal Absen');
             return redirect('/');
         }
+        }else{
+            Session::flash('qr-notfound', 'Gagal Absen');
+            return redirect('/');
+        }
     }
     public function absenSiang($id){
+
         $pegawai = DB::table('pegawai')
             ->where('pegawai_nip', '=', $id)
             ->first();
+        if($pegawai != NULL){
         $cek_absen = $this->cekAbsen($pegawai->pegawai_id,date('Y-m-d'),'siang');
         if ($cek_absen == 0){
-            if (date('H:m:s')  <=  $this->cekWaktu('siang')) {
+            if (date('H:m:s')  <=  $this->cekWaktu('siang') && date('H:m:s') > '14:00:00') {
                 DB::table('data_absen')->insert([
                     'absen_pegawai' => $pegawai->pegawai_id,
                     'absen_kategori' => 'siang',
                     'absen_tgl' => date('Y-m-d'),
                 ]);
-            }else{
+            }else if (date('H:m:s')  >  $this->cekWaktu('siang')){
                 DB::table('data_absen')->insert([
                     'absen_pegawai' => $pegawai->pegawai_id,
                     'absen_kategori' => 'siang',
                     'absen_status' => 'telat',
                     'absen_tgl' => date('Y-m-d'),
                 ]);
+            }else{
+                Session::flash('belum-waktu', 'Berhasil Absen');
+                return redirect('/');
             }
             Session::flash('alert-absen', 'Berhasil Absen');
             return redirect('/');
         }else{
             Session::flash('sudah-absen', 'Gagal Absen');
+            return redirect('/');
+        }
+        }else{
+            Session::flash('qr-notfound', 'Gagal Absen');
             return redirect('/');
         }
     }

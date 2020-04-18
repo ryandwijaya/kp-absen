@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Ality - Admin Dashboard Template</title>
+    <title>@yield('title_page')</title>
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('') }}assets/css/app.min.css">
     <!-- Template CSS -->
@@ -40,15 +40,9 @@
                         <img alt="image" src="{{ asset('') }}assets/img/user.png" class="user-img-radious-style">
                         <span class="d-sm-none d-lg-inline-block"></span></a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <div class="dropdown-title">Hello Sarah Smith</div>
-                        <a href="profile.html" class="dropdown-item has-icon">
+                        <div class="dropdown-title">{{Auth::user()->name}}</div>
+                        <a href="{{ url('profil') }}" class="dropdown-item has-icon">
                             <i class="far fa-user"></i> Profile
-                        </a>
-                        <a href="timeline.html" class="dropdown-item has-icon">
-                            <i class="fas fa-bolt"></i> Activities
-                        </a>
-                        <a href="#" class="dropdown-item has-icon">
-                            <i class="fas fa-cog"></i> Settings
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="{{ route('logout') }}"
@@ -75,10 +69,18 @@
                     <li class="menu-header">Main</li>
 
                     <li><a class="nav-link" href="blank.html"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
-                    <li><a class="nav-link" href="{{ url('profil') }}"><i class="fas fa-address-card"></i><span>Profil</span></a></li>
-                    <li><a class="nav-link" href="{{ url('pegawai') }}"><i class="fas fa-users"></i><span>Pegawai</span></a></li>
-                    <li><a class="nav-link" href="{{ url('data-absen') }}"><i class="fas fa-tasks"></i><span>Data Absen</span></a></li>
 
+                    <li><a class="nav-link" href="{{ url('profil') }}"><i class="fas fa-address-card"></i><span>Profil</span></a></li>
+                    @if(Auth::user()->level != 'pegawai')
+                    <li><a class="nav-link" href="{{ url('pegawai') }}"><i class="fas fa-users"></i><span>Pegawai</span></a></li>
+                        <li><a class="nav-link" href="{{ url('data-absen') }}"><i class="fas fa-tasks"></i><span>Data Absen</span></a></li>
+                    @endif
+                @if(Auth::user()->level == 'admin')
+                        <li class="menu-header">LAPORAN</li>
+                        <li><a class="nav-link" href="{{ url('lap/harian') }}"><i class="fas fa-file-alt"></i><span>Harian</span></a></li>
+                        <li><a class="nav-link" href="{{ url('lap/bulanan') }}"><i class="fas fa-file-alt"></i><span>Bulanan</span></a></li>
+
+                    @endif
 
 
                 </ul>
@@ -125,5 +127,14 @@
 <script src="{{ asset('') }}assets/js/scripts.js"></script>
 <!-- Custom JS File -->
 <script src="{{ asset('') }}assets/js/custom.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+@if(\Illuminate\Support\Facades\Session::has('alert'))
+    <script>
+        Swal.fire(
+            'Berhasil !',
+            'Aksi berhasil dilakukan!',
+            'success'
+        )
+    </script>
+@endif
 </html>

@@ -1,5 +1,6 @@
 @extends('layouts/main')
 
+@section('title_page','Data Pegawai')
 @section('judul_halaman','Pegawai')
 
 @section('konten')
@@ -14,29 +15,36 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover" id="tableExport" style="width:100%;">
+                        <table class="table table-striped table-hover" id="tableExport" style="width:100%;font-size: 13px;">
                             <thead>
-                            <tr >
+                            <tr class="text-center">
                                 <th class="text-center" width="50">No</th>
                                 <th>Nama</th>
                                 <th>Nip</th>
                                 <th>Email</th>
                                 <th>Jabatan</th>
                                 <th>Nomor Hp</th>
-                                <th class="text-center"><i class="mdi mdi-cogs"></i></th>
+                                @if(Auth::user()->level == 'admin')
+                                    <th class="text-center"><i class="fa fa-cogs"></i></th>
+                                @endif
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($pegawai as $item)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $item->pegawai_nama }}</td>
-                                    <td>{{ $item->pegawai_nip }}</td>
+                                    <td >{{ $item->pegawai_nip }}</td>
                                     <td>{{ $item->pegawai_email }}</td>
-                                    <td>{{ $item->pegawai_jabatan }}</td>
-                                    <td>{{ $item->pegawai_hp }}</td>
+                                    <td class="text-center">{{ $item->pegawai_jabatan }}</td>
+                                    <td class="text-center">{{ $item->pegawai_hp }}</td>
 {{--                                    <td><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ $item->Pegawai_no }}" alt=""></td>--}}
-                                    <td><a href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ $item->pegawai_nip }}">Lihat Barcode</a></td>
+                                    @if(Auth::user()->level == 'admin')
+                                        <td class="text-center">
+                                            <a href="{{ route('pegawai.edit',[$item->pegawai_id]) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a> |
+                                            <a href="{{ url('pegawai/delete',[$item->pegawai_id]) }}" onclick="confirm('Tekan Ok untuk melanjutkan aksi ini !')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
 

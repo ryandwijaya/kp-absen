@@ -1,6 +1,6 @@
 @extends('layouts/main')
-
-@section('judul_halaman','Pegawai')
+@section('title_page','Rekap Data Absen')
+@section('judul_halaman','Data Absen')
 
 @section('konten')
     <div class="row">
@@ -8,9 +8,8 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title float-left">
-                        Data Pegawai
+                        Data Absen
                     </h4>
-                    <button class="btn btn-primary float-right btn-sm"  data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"></i> Data Pegawai</button>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

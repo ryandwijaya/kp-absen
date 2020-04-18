@@ -16,10 +16,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'HomeController@index');
 Route::get('/absen', 'AbsenController@index');
 Route::get('/profil', 'PegawaiController@profil');
+
+Route::get('/lap/harian', 'LaporanController@harian');
+Route::get('/lap/bulanan', 'LaporanController@bulanan');
+
 Route::get('/absen/{jenis}', 'AbsenController@absen');
 Route::get('/absen/apel/{id}', 'AbsenController@absenApel');
 Route::get('/absen/pagi/{id}', 'AbsenController@absenPagi');
 Route::get('/absen/siang/{id}', 'AbsenController@absenSiang');
+Route::get('/pegawai/delete/{id}', 'PegawaiController@destroy');
 Route::resource('/pegawai', 'PegawaiController');
 Route::resource('/data-absen', 'DataAbsenController');
 

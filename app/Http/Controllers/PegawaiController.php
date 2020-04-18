@@ -97,7 +97,11 @@ class PegawaiController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data['pegawai'] = DB::table('pegawai')
+            ->where('pegawai_id','=',$id)
+            ->leftJoin('users','users.id_pegawai','=','pegawai.pegawai_id')
+            ->first();
+        return view('pegawai/edit',$data);
     }
 
     /**
@@ -109,7 +113,25 @@ class PegawaiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        DB::table('pegawai')->where('pegawai_id','=',$id)
+            ->update([
+                'pegawai_nama' => $request->nama,
+                'pegawai_email' => $request->email,
+                'pegawai_nip' => $request->nip,
+                'pegawai_hp' => $request->hp,
+                'pegawai_mulai_kerja' => $request->mulai_kerja,
+                'pegawai_jabatan' => $request->jabatan
+            ]);
+
+        DB::table('users')->where('id_pegawai','=',$id)
+            ->update([
+                'name' => $request->nama,
+                'id_pegawai' => $id,
+                'email' => $request->email,
+                'level' => $request->level
+            ]);
+        $request->session()->flash('alert', ' Menyimpan Data');
+        return redirect('/pegawai');
     }
 
     /**
@@ -118,8 +140,12 @@ class PegawaiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id,Request $request)
     {
-        //
+        DB::table('users')->where('id_pegawai', '=', $id)->delete();
+        DB::table('pegawai')->where('pegawai_id', '=', $id)->delete();
+        DB::table('data_absen')->where('absen_pegawai', '=', $id)->delete();
+        $request->session()->flash('alert', ' Delete Data');
+        return redirect('/pegawai');
     }
 }
