@@ -7,9 +7,10 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title float-left">
-                        Data Absen
-                    </h4>
+
+
+                            <button style="position: absolute;right: 2%;top:2%;" data-toggle="modal" data-target="#exampleModal" class="btn float-right btn-primary btn-sm"><i class="fas fa-plus"></i> Izin,Cuti,Dinas,Sakit</button>
+
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -37,6 +38,8 @@
                                     <td>
                                         @if($item->absen_status == 'ontime')
                                         <span class="badge badge-success">{{ $item->absen_status }}</span>
+                                            @elseif($item->absen_status == 'telat')
+                                        <span class="badge badge-warning">{{ $item->absen_status }}</span>
                                             @else
                                         <span class="badge badge-danger">{{ $item->absen_status }}</span>
                                         @endif
@@ -54,6 +57,66 @@
     </div>
 
 @endsection
+
+
+
+<!-- Modal with form -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="formModal"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formModal">Tambah Absen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url('absen/izin')  }}" method="post">
+                    {{ csrf_field() }}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Pilih Pegawai</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <select name="pegawai" class="form-control select2" style="width: 100%;">
+                                <option disabled selected>- Pilih Pegawai -</option>
+                                @foreach($pegawai as $pgw)
+                                    <option value="{{$pgw->pegawai_id}}">{{$pgw->pegawai_nama}} - {{$pgw->pegawai_nip}} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <label>Pilih Status</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <select name="status" class="form-control" style="width: 100%;">
+                                <option disabled selected>- Pilih Status -</option>
+                                <option value="izin">Izin</option>
+                                <option value="sakit">Sakit</option>
+                                <option value="cuti">Cuti</option>
+                                <option value="dinas">Dinas</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class=" mt-3 btn btn-success float-right">Simpan</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 @php

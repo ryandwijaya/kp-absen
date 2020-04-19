@@ -154,4 +154,20 @@ class AbsenController extends Controller
             return $data->waktu_siang;
         }
     }
+
+    public function store(Request $request)
+    {
+        $kategori = ['apel','pagi','siang'];
+        for ($i = 0;$i<count($kategori);$i++){
+            DB::table('data_absen')->insert([
+                'absen_pegawai' => $request->pegawai,
+                'absen_kategori' => $kategori[$i],
+                'absen_status' => $request->status,
+                'absen_tgl' => date('Y-m-d'),
+            ]);
+        }
+
+        Session::flash('alert', 'Manyimpan Data');
+        return redirect('data-absen');
+    }
 }

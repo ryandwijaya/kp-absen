@@ -2,8 +2,8 @@
     use Illuminate\Support\Facades\DB;
 @endphp
 @extends('layouts/main')
-@section('title_page','Rekap Data Absen')
-@section('judul_halaman','Data Absen')
+@section('title_page','Rekap Data Absen Bulanan')
+@section('judul_halaman','Data Absen Bulanan')
 
 @section('konten')
     <style>
@@ -24,13 +24,35 @@
                 <div class="card-header row d-print-none">
                     <div class="col-md-12">
 
-                        <form action="{{action('LaporanController@harian')}}" method="POST" class="float-left" style="width: 80%;">
+                        <form action="{{action('LaporanController@bulanan')}}" method="POST" class="float-left" style="width: 80%;">
                             @csrf
                             <div class="form-group row">
 
                                 <div class="col-md-4">
-                                    <input type="date" class="form-control text-center  " name="tgl"
-                                           value="{{$tgl}}">
+                                    <select name="bulan" class="form-control">
+                                        <option value="01">Januari</option>
+                                        <option value="02">Februari</option>
+                                        <option value="03">Maret</option>
+                                        <option value="04">April</option>
+                                        <option value="05">Mei</option>
+                                        <option value="06">Juni</option>
+                                        <option value="07">Juli</option>
+                                        <option value="08">Agustus</option>
+                                        <option value="09">September</option>
+                                        <option value="10">Oktober</option>
+                                        <option value="11">November</option>
+                                        <option value="12">Desember</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select name="tahun" class="form-control">
+                                        @php
+                                            $tahunNow = date('Y');
+                                            for($i = $tahunNow ; $i >= 2010; $i--){
+                                        @endphp
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                        @php } @endphp
+                                    </select>
                                 </div>
                                 <div class="col-md-2">
                                     <button type="submit" class="btn btn-primary form-control">Lihat</button>
@@ -52,7 +74,7 @@
                     </div>
                     <div class="row mt-4">
                         <div class="col-md-12">
-                            <span>Tanggal : {{ date_indo($tgl) }}</span>
+                            <span>Waktu : {{ bulan($bulan)  }} {{ $tahun }}</span>
                         </div>
                     </div>
                     <div class="row mt-2">
@@ -73,21 +95,24 @@
                                 </tr>
                                 @foreach($pegawai as $item)
                                     @php
-                                    $apel = DB::table('data_absen')
-                                            ->where('absen_kategori','apel')
-                                            ->where('absen_pegawai',$item->pegawai_id)
-                                            ->where('absen_tgl',$tgl)
-                                            ->first();
-                                    $pagi = DB::table('data_absen')
-                                            ->where('absen_kategori','pagi')
-                                            ->where('absen_pegawai',$item->pegawai_id)
-                                            ->where('absen_tgl',$tgl)
-                                            ->first();
-                                    $siang = DB::table('data_absen')
-                                            ->where('absen_kategori','siang')
-                                            ->where('absen_pegawai',$item->pegawai_id)
-                                            ->where('absen_tgl',$tgl)
-                                            ->first();
+                                        $apel = DB::table('data_absen')
+                                                ->where('absen_kategori','apel')
+                                                ->where('absen_pegawai',$item->pegawai_id)
+                                                ->whereMonth('absen_tgl',$bulan)
+                                                ->whereYear('absen_tgl',$tahun)
+                                                ->first();
+                                        $pagi = DB::table('data_absen')
+                                                ->where('absen_kategori','pagi')
+                                                ->where('absen_pegawai',$item->pegawai_id)
+                                                ->whereMonth('absen_tgl',$bulan)
+                                                ->whereYear('absen_tgl',$tahun)
+                                                ->first();
+                                        $siang = DB::table('data_absen')
+                                                ->where('absen_kategori','siang')
+                                                ->where('absen_pegawai',$item->pegawai_id)
+                                                ->whereMonth('absen_tgl',$bulan)
+                                                ->whereYear('absen_tgl',$tahun)
+                                                ->first();
                                     @endphp
                                     <tr>
                                         <td class="text-center">{{$loop->iteration}}</td>

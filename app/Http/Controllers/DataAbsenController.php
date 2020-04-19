@@ -23,6 +23,8 @@ class DataAbsenController extends Controller
             ->leftJoin('pegawai','pegawai.pegawai_id','=','data_absen.absen_pegawai')
             ->orderByDesc('absen_date_created')
             ->get();
+        $data['pegawai']= DB::table('pegawai')
+            ->get();
         return view('data-absen/index',$data);
     }
 

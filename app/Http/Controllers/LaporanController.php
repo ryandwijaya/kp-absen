@@ -12,6 +12,7 @@ class LaporanController extends Controller
         $this->middleware('auth');
         date_default_timezone_set('Asia/Jakarta');
     }
+
     public function harian(Request $request)
     {
         $tgl = $request->tgl;
@@ -28,5 +29,25 @@ class LaporanController extends Controller
             ->where('users.level' ,'=','kepala')
             ->first();
         return view('laporan/harian',$data);
+    }
+    public function bulanan(Request $request)
+    {
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+        if ($bulan == null || $bulan == ''){
+            $data['bulan'] = date('m');
+            $data['tahun'] = date('Y');
+        }else{
+            $data['bulan'] = $bulan;
+            $data['tahun'] = $tahun;
+        }
+        $data['pegawai'] = DB::table('pegawai')
+            ->orderBy('pegawai_nama')
+            ->get();
+        $data['kepala'] = DB::table('pegawai')
+            ->leftJoin('users' ,'users.id_pegawai','=','pegawai.pegawai_id')
+            ->where('users.level' ,'=','kepala')
+            ->first();
+        return view('laporan/bulanan',$data);
     }
 }

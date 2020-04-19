@@ -17,8 +17,10 @@ Route::get('/', 'HomeController@index');
 Route::get('/absen', 'AbsenController@index');
 Route::get('/profil', 'PegawaiController@profil');
 
-Route::get('/lap/harian', 'LaporanController@harian');
-Route::get('/lap/bulanan', 'LaporanController@bulanan');
+Route::any('/lap/harian', 'LaporanController@harian');
+Route::any('/lap/bulanan', 'LaporanController@bulanan');
+
+Route::post('/absen/izin', 'AbsenController@store');
 
 Route::get('/absen/{jenis}', 'AbsenController@absen');
 Route::get('/absen/apel/{id}', 'AbsenController@absenApel');

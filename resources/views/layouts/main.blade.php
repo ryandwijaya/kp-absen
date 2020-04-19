@@ -7,7 +7,11 @@
     <title>@yield('title_page')</title>
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('') }}assets/css/app.min.css">
+    <link rel="stylesheet" href="{{ asset('') }}assets/bundles/select2/dist/css/select2.min.css">
     <!-- Template CSS -->
+    <link rel="stylesheet" href="{{ asset('') }}assets/bundles/bootstrap-daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="{{ asset('') }}assets/bundles/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
+
     <link rel="stylesheet" href="{{ asset('') }}assets/bundles/datatables/datatables.min.css">
     <link rel="stylesheet" href="{{ asset('') }}assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="{{ asset('') }}assets/css/style.css">
@@ -123,6 +127,11 @@
 <script src="{{ asset('') }}assets/bundles/datatables/export-tables/vfs_fonts.js"></script>
 <script src="{{ asset('') }}assets/bundles/datatables/export-tables/buttons.print.min.js"></script>
 <script src="{{ asset('') }}assets/js/page/datatables.js"></script>
+
+
+<script src="{{ asset('') }}assets/bundles/select2/dist/js/select2.full.min.js"></script>
+<!-- Page Specific JS File -->
+<script src="{{ asset('') }}assets/js/page/forms-advanced-forms.js"></script>
 <!-- Template JS File -->
 <script src="{{ asset('') }}assets/js/scripts.js"></script>
 <!-- Custom JS File -->
